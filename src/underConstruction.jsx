@@ -1,65 +1,64 @@
-"use client";
+import React, { useState, useEffect } from 'react';
+import './underConstruction.css';
 
-import { useState, useEffect } from "react";
+const UnderConstruction = () => {
+    const [produceItems, setProduceItems] = useState([
+        { emoji: '🍅', position: 0, speed: 0.45, id: 1 },
+        { emoji: '🌽', position: -20, speed: 0.4, id: 2 },
+        { emoji: '🍑', position: -40, speed: 0.35, id: 3 },
+        { emoji: '🫐', position: -60, speed: 0.25, id: 4 },
+    ]);
 
-// Move catMessages OUTSIDE the component
-const catMessages = [
-    "I'm working on it...",
-    "Please stand by. I'm chasing a bug.",
-    "I would be done, but I saw a laser pointer.",
-    "Taking a break. Union rules.",
-];
-
-export default function UnderConstruction() {
-    const [message, setMessage] = useState(catMessages[0]);
-    const [meow, setMeow] = useState(false);
-
-    // Rotate message every 3 seconds
     useEffect(() => {
         const interval = setInterval(() => {
-            const random = Math.floor(Math.random() * catMessages.length);
-            setMessage(catMessages[random]);
-        }, 3000);
+            setProduceItems(prev => prev.map(item => ({
+                ...item,
+                position: item.position >= 120 ? -20 : item.position + item.speed
+            })));
+        }, 30);
 
         return () => clearInterval(interval);
-    }, []); // <-- no warnings now
-
-    // Meow effect on button press
-    const handleMeow = () => {
-        setMeow(true);
-        setTimeout(() => setMeow(false), 800);
-    };
+    }, []);
 
     return (
-        <div className="cat-container">
-            <h1 className="title">Site Under Construction</h1>
+        <div className="construction-container">
+            <div className="content">
+                <div className="header-section">
+                    <h1 className="main-title">
+                        <span className="title">Jersey Girls Media</span>
 
-            <div className="cat-wrapper">
-                <img
-                    src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3NHQ1djdwZDI2azQ0MG1hanJoaHl5dGltaHJ6MWl5ZHM0NnM5cnJ2OCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/LHb4L8BytFRGx15quf/giphy.gif"
-                    alt="Cat typing furiously"
-                    className="cat-gif"
-                />
-            </div>
-
-            <p className="cat-text">{message}</p>
-
-            <button className="meow-button" onClick={handleMeow}>
-                Pet the Developer
-            </button>
-
-            {meow && <p className="meow">GET OFF ME!</p>}
-
-            {/* PRODUCTIVITY METER */}
-            <div className="productivity-wrapper">
-                <p className="prod-label">Productivity: 1%</p>
-
-                <div className="prod-bar">
-                    <div className="prod-fill"></div>
+                    </h1>
+                    <div className="produce-parade">
+                        {produceItems.map(item => (
+                            <div
+                                key={item.id}
+                                className="produce-item"
+                                style={{ left: `${item.position}%` }}
+                            >
+                                {item.emoji}
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
-                <p className="prod-caption">Estimated completion: lol</p>
+                <div className="construction-box">
+                    <div className="construction-header">
+                        <span className="cone">🚧</span>
+                        <h2>Under Construction</h2>
+                        <span className="cone">🚧</span>
+                    </div>
+
+                    <p className="tagline">
+                        We're building something fresh from the Garden State!
+                    </p>
+
+                    <div className="footer-note">
+                        <p>Check Back Soon</p>
+                    </div>
+                </div>
             </div>
         </div>
     );
-}
+};
+
+export default UnderConstruction;
